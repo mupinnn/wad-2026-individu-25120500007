@@ -1,5 +1,5 @@
 from typing import Annotated, Literal
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path, Response, status
 from pydantic import BaseModel, Field, StringConstraints
 
 app = FastAPI()
@@ -107,4 +107,15 @@ def get_books(q: Annotated[GetBooksFilterParams, Query()]):
         results = [book for book in books if q.search in book['judul'].lower()]
 
     return results[q.skip : q.skip + q.limit]
+
+@app.get("/books/{id}")
+def get_books_by_id(id: Annotated[int, Path(title="ID dari buku yang ingin dilihat detailnya")], response: Response):
+    res = [book for book in books if id == book['id']]
+    res = res[0] if res else None
+
+    if res == None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        res = {"status": "not found", "message": "Buku yang kamu cari tidak ditemukan."}
+
+    return res
 
