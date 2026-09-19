@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
-from fastapi import FastAPI, Query, Path, Response, status
-from pydantic import BaseModel, Field, StringConstraints
+from fastapi import FastAPI, Query, Path, Request, Response, status
+from pydantic import BaseModel, Field, StringConstraints, ConfigDict
 
 app = FastAPI()
 
@@ -30,6 +30,7 @@ books = [
         "tahun_terbit": 2008,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 4,
@@ -47,6 +48,7 @@ books = [
         "tahun_terbit": 2010,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 6,
@@ -55,6 +57,7 @@ books = [
         "tahun_terbit": 2011,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 7,
@@ -63,6 +66,7 @@ books = [
         "tahun_terbit": 2012,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 8,
@@ -71,6 +75,7 @@ books = [
         "tahun_terbit": 2013,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 9,
@@ -79,6 +84,7 @@ books = [
         "tahun_terbit": 2014,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     },
     {
         "id": 10,
@@ -87,6 +93,7 @@ books = [
         "tahun_terbit": 2015,
         "pengarang": "Suzanne Collins",
         "penerbit": "Scholastic",
+        "jumlah_halaman": 420
     }
 ]
 
@@ -119,3 +126,24 @@ def get_books_by_id(id: Annotated[int, Path(title="ID dari buku yang ingin dilih
 
     return res
 
+class BookCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    isbn: str
+    judul: str
+    tahun_terbit: int
+    pengarang: str
+    penerbit: str
+    jumlah_halaman: int
+
+class Book(BookCreate):
+    id: int
+
+@app.post("/books", response_model=Book, status_code=status.HTTP_201_CREATED)
+def create_books(book: BookCreate, request: Request, response: Response):
+    new_id = max((b["id"] for b in books), default=0) + 1
+    new_book = {"id": new_id, **book.model_dump()}
+    books.append(new_book)
+
+    response.headers["Location"] = str(request.url_for("get_books_by_id", id=new_id))
+    return new_book
