@@ -1,28 +1,5 @@
-# frontend/ — sengaja kosong
+# Vue 3 + Vite
 
-Kamu yang mengisi folder ini, mulai Sesi 2. Repo ini tidak memberimu aplikasi jadi, karena
-membangun kerangkanya **adalah** artefak yang dinilai.
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-Sesi 2, yang harus ada di sini sebelum kamu keluar:
-
-```
-frontend/
-├── index.html
-├── package.json        # vite, vue   — harus punya skrip "dev"
-├── vite.config.js
-└── src/
-    ├── main.js
-    ├── App.vue         # header + main, HTML semantik, rapi di 360px
-    └── components/
-```
-
-Titik mulai:
-
-```bash
-cd frontend
-npm create vite@latest . -- --template vue
-npm install
-npm run dev
-```
-
-Hapus berkas ini kalau sudah tidak perlu.
+Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
